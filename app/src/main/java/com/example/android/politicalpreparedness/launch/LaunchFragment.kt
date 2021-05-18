@@ -17,12 +17,12 @@ class LaunchFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.representativeButton.setOnClickListener { navToRepresentatives() }
-        binding.upcomingButton.setOnClickListener { navToElections() }
+        binding.upcomingButton.setOnClickListener { navToUpcomingElection()  }
 
         return binding.root
     }
 
-    private fun navToElections() {
+    private fun navToUpcomingElection() {
         this.findNavController().navigate(LaunchFragmentDirections.actionLaunchFragmentToElectionsFragment())
     }
 
