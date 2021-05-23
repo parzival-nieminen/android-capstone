@@ -1,11 +1,8 @@
 package com.example.android.politicalpreparedness.database
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.android.politicalpreparedness.network.CivicsApiService
-import com.example.android.politicalpreparedness.network.models.Election
-import com.example.android.politicalpreparedness.network.models.State
-import com.example.android.politicalpreparedness.representative.model.Representative
+import com.example.android.politicalpreparedness.network.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -15,71 +12,39 @@ class RepositoryImpl constructor(
     private val electionDao: ElectionDao
 ) : Repository {
 
-    override val state = MutableLiveData<State>()
-    override val upcomingElections = MutableLiveData<List<Election>>()
-    override val representatives = MutableLiveData<List<Representative>>()
-    override val savedElections: LiveData<List<Election>> = electionDao.selectAll()
+    override fun selectById(id: Int): LiveData<Election?> =
+        electionDao.selectById(id)
 
-    override suspend fun reloadUpcomingElections() {
-        Timber.i("call reloadUpcomingElections")
-        withContext(Dispatchers.IO) {
-            try {
-                val electionResponse = service.getElections()
-                upcomingElections.postValue(electionResponse.elections)
-            } catch (exception: Exception) {
-                Timber.e(exception)
-            }
-        }
-    }
+    override fun selectAll(): LiveData<List<Election>> =
+        electionDao.selectAll()
 
-    override suspend fun reloadVoterInfo(address: String, electionId: Int) {
-        Timber.i("call reloadVoterInfo")
-        withContext(Dispatchers.IO) {
-            try {
-                val voterResponse = service.getVoterInfo(address, electionId)
-                state.postValue(voterResponse.state?.get(0))
-            } catch (exception: Exception) {
-                Timber.e(exception)
-            }
-        }
-    }
-
-    override suspend fun reloadRepresentatives(address: String) {
-        Timber.i("call reloadRepresentatives")
-        withContext(Dispatchers.IO) {
-            try {
-                val (offices, officials) = service.getRepresentatives(address)
-                representatives.postValue(offices.flatMap { office ->
-                    office.getRepresentatives(
-                        officials
-                    )
-                })
-            } catch (exception: Exception) {
-                Timber.e(exception)
-            }
-        }
-    }
-
-    override suspend fun followElection(election: Election) {
-        Timber.i("call followElection")
+    override suspend fun insert(election: Election) {
+        Timber.i("INSERT: ${election.toString()}")
         withContext(Dispatchers.IO) {
             electionDao.insert(election)
         }
     }
 
-    override suspend fun unfollowElection(election: Election) {
-        Timber.i("call isElectionSaved")
+    override suspend fun delete(election: Election) {
+        Timber.i("DELETE: ${election.toString()}")
         withContext(Dispatchers.IO) {
-            electionDao.delete(election.id)
+            electionDao.delete(election)
         }
     }
 
-    override suspend fun isElectionSaved(election: Election): Boolean {
-        Timber.i("call isElectionSaved")
-        val electionById: Election
+    override suspend fun getElections(): ElectionResponse =
         withContext(Dispatchers.IO) {
-            electionById = electionDao.selectById(election.id)
+            service.getElections()
         }
-        return electionById == election
-    }
+
+    override suspend fun getVoterInfo(address: String, id: Int): VoterInfoResponse =
+        withContext(Dispatchers.IO) {
+            service.getVoterInfo(address, id)
+        }
+
+    override suspend fun getRepresentatives(address: String): RepresentativeResponse =
+        withContext(Dispatchers.IO) {
+            service.getRepresentatives(address)
+        }
 }
+

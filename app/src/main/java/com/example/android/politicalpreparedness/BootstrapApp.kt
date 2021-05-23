@@ -26,13 +26,11 @@ class BootstrapApp : Application() {
             single { return@single CivicsApi.retrofitService }
             single { ElectionDatabase.getInstance(get()).electionDao }
             single<Repository> { RepositoryImpl(get(), get()) }
-            viewModel { RepresentativeViewModel(get(), get()) }
+            viewModel { RepresentativeViewModel(get()) }
             viewModel { ElectionsViewModel(get(), get()) }
-            viewModel { (followString: String, unfollowString: String, election: Election) ->
+            viewModel { (election: Election) ->
                 VoterInfoViewModel(
                     get(),
-                    followString,
-                    unfollowString,
                     election
                 )
             }

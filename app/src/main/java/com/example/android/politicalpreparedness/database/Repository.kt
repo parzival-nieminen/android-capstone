@@ -1,27 +1,24 @@
 package com.example.android.politicalpreparedness.database
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.android.politicalpreparedness.network.models.Election
-import com.example.android.politicalpreparedness.network.models.State
-import com.example.android.politicalpreparedness.representative.model.Representative
+import com.example.android.politicalpreparedness.network.models.ElectionResponse
+import com.example.android.politicalpreparedness.network.models.RepresentativeResponse
+import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
 
 interface Repository {
 
-    val state: MutableLiveData<State>
-    val upcomingElections: MutableLiveData<List<Election>>
-    val representatives: MutableLiveData<List<Representative>>
-    val savedElections: LiveData<List<Election>>
+    fun selectById(id: Int): LiveData<Election?>
 
-    suspend fun reloadUpcomingElections()
+    fun selectAll(): LiveData<List<Election>>
 
-    suspend fun reloadVoterInfo(address: String, electionId: Int)
+    suspend fun insert(election: Election)
 
-    suspend fun reloadRepresentatives(address: String)
+    suspend fun delete(election: Election)
 
-    suspend fun followElection(election: Election)
+    suspend fun getElections(): ElectionResponse
 
-    suspend fun unfollowElection(election: Election)
+    suspend fun getVoterInfo(address: String, id: Int): VoterInfoResponse
 
-    suspend fun isElectionSaved(election: Election): Boolean
+    suspend fun getRepresentatives(address: String): RepresentativeResponse
 }
