@@ -3,19 +3,13 @@ package com.example.android.politicalpreparedness.election.adapter
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.ItemContentBinding
 import com.example.android.politicalpreparedness.databinding.ItemTitleBinding
 import com.example.android.politicalpreparedness.network.models.Election
 
-/**
- * This Impl. based on an older knowledge based questions and feedbacks
- * https://knowledge.udacity.com/?nanodegree=nd940&page=1&project=727&rubric=2848
- **/
 class ElectionListAdapter(
     private val headerTitle: String,
     private val onClickListener: (Election) -> Unit

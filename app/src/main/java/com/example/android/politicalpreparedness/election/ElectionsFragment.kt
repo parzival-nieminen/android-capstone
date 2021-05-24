@@ -14,10 +14,6 @@ import com.example.android.politicalpreparedness.databinding.FragmentElectionBin
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * This Impl. based on an older knowledge based questions and feedbacks
- * https://knowledge.udacity.com/?nanodegree=nd940&page=1&project=727&rubric=2848
- **/
 class ElectionsFragment : Fragment() {
 
     val viewModel: ElectionsViewModel by viewModel()
