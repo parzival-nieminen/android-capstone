@@ -30,12 +30,12 @@
     <fragment
         android:id="@+id/representativeFragment"
         android:name="com.example.android.politicalpreparedness.representative.RepresentativeFragment"
-        android:label="@string/lable_representatives"
+        android:label="@string/label_representatives"
         tools:layout="@layout/fragment_representative" />
     <fragment
         android:id="@+id/voterInfoFragment"
         android:name="com.example.android.politicalpreparedness.election.VoterInfoFragment"
-        android:label="@string/voterInfoTitle">
+        android:label="@string/label_details">
         <argument
             android:name="arg_election"
             app:argType="com.example.android.politicalpreparedness.network.models.Election" />

@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Political Preparedness</string>
-
-    <!-- TODO: Add necessary string values -->
-
+    <string name="label_address_line_one">Address Line 1</string>
+    <string name="label_address_line_two">Address Line 2</string>
+    <string name="label_ballot_information"><u>Ballot information</u></string>
+    <string name="hint_city">City</string>
+    <string name="label_correspondence_address">Correspondence address</string>
+    <string name="label_election_information">Election information</string>
+    <string name="button_find_my_representatives">Find my representatives</string>
+    <string name="button_follow_election">Follow election</string>
+    <string name="label_selected_elections">Selected Elections</string>
+    <string name="image_content_description">Location services must be enabled to use this feature.</string>
+    <string name="label_my_representatives">My representatives</string>
+    <string name="info_nothing_here_yet">Nothing here yet</string>
+    <string name="button_upcoming_elections">Upcoming Elections</string>
+    <string name="label_upcoming_elections">Upcoming Elections</string>
+    <string name="button_unfollow_election">Unfollow election</string>
+    <string name="button_use_my_location">Use my location</string>
+    <string name="label_representative_search">Representative Search</string>
+    <string name="label_voting_locations">"<u>Voting Locations></u>"</string>
+    <string name="hint_zip_code">ZIP Code</string>
+    <string name="label_details">Detail\'s</string>
+    <string name="label_elections">Elections</string>
+    <string name="label_representatives">Representatives</string>
+    <string name="label_political_preparedness">Political Preparedness</string>
+    <string name="label_representative_photo">Representative Photo</string>
+    <string name="label_open_twitter">Open Twitter</string>
+    <string name="label_open_facebook">Open Facebook</string>
+    <string name="label_open_website">Open website</string>
 </resources>
