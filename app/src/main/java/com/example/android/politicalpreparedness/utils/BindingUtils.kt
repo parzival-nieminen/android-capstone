@@ -26,6 +26,11 @@ fun bindListData(recyclerView: RecyclerView, data: List<Election>?) {
     recyclerView.scrollToPosition(0)
 }
 
+@BindingAdapter("noData")
+fun bindNoData(view: View, data: List<Election>?) {
+    view.visibility = if (data?.isEmpty() == true) View.VISIBLE else View.GONE
+}
+
 @BindingAdapter("DateFormat")
 fun bindDateFormat(textView: TextView, date: Date?) {
     textView.text = ""

@@ -9,10 +9,10 @@ fun Date.toFormatString(): String {
     return format.format(this)
 }
 
-fun View.gone() {
+fun View.hide() {
     this.visibility = View.GONE
 }
 
-fun View.visible() {
+fun View.show() {
     this.visibility = View.VISIBLE
 }

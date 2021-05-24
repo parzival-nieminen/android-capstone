@@ -5,26 +5,64 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.android.politicalpreparedness.R
+import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
+import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ElectionsFragment: Fragment() {
+/**
+ * This Impl. based on an older knowledge based questions and feedbacks
+ * https://knowledge.udacity.com/?nanodegree=nd940&page=1&project=727&rubric=2848
+ **/
+class ElectionsFragment : Fragment() {
 
-    //TODO: Declare ViewModel
+    val viewModel: ElectionsViewModel by viewModel()
+    private lateinit var binding: FragmentElectionBinding
+    private lateinit var selectedElectionsAdapter: ElectionListAdapter
+    private lateinit var upcomingElectionsAdapter: ElectionListAdapter
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-        //TODO: Add ViewModel values and create ViewModel
+        binding = FragmentElectionBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
-        //TODO: Add binding values
+        selectedElectionsAdapter = ElectionListAdapter(getString(R.string.label_selected_elections)) {
+            viewModel.displayVoterInfo(it)
+        }
 
-        //TODO: Link elections to voter info
+        binding.recyclerViewSelectedElection.apply {
+            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            adapter = selectedElectionsAdapter
+            selectedElectionsAdapter.addHeaderAndSubmitList(listOf())
+        }
 
-        //TODO: Initiate recycler adapters
+        upcomingElectionsAdapter = ElectionListAdapter(getString(R.string.label_upcoming_elections)) {
+            viewModel.displayVoterInfo(it)
+        }
 
-        //TODO: Populate recycler adapters
+        binding.recyclerViewUpcomingElection.apply {
+            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            adapter = upcomingElectionsAdapter
+            upcomingElectionsAdapter.addHeaderAndSubmitList(listOf())
+        }
+
+        viewModel.goToVoterInfo.observe(viewLifecycleOwner, Observer { election ->
+            if (election != null) {
+                findNavController().navigate(
+                    ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(election)
+                )
+                viewModel.displayVoterInfoSuccessful()
+            }
+        })
+        return binding.root
     }
-
-    //TODO: Refresh adapters when fragment loads
-
 }

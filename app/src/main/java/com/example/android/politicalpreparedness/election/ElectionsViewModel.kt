@@ -1,16 +1,42 @@
 package com.example.android.politicalpreparedness.election
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.android.politicalpreparedness.database.Repository
+import com.example.android.politicalpreparedness.network.models.Election
+import kotlinx.coroutines.launch
 
-//TODO: Construct ViewModel and provide election datasource
-class ElectionsViewModel: ViewModel() {
+class ElectionsViewModel constructor(repository: Repository, app: Application) :
+    AndroidViewModel(app) {
 
-    //TODO: Create live data val for upcoming elections
+    init {
+        viewModelScope.launch {
+            try {
+                val elections = repository.getElections()
+                _upcomingElections.value = elections.elections
+            } catch (exception: Exception) {
+            }
+        }
+    }
 
-    //TODO: Create live data val for saved elections
+    private val _goToVoterInfo = MutableLiveData<Election?>()
+    val goToVoterInfo: LiveData<Election?>
+        get() = _goToVoterInfo
 
-    //TODO: Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
+    private val _upcomingElections = MutableLiveData<List<Election>>()
+    val upcomingElections: LiveData<List<Election>>
+        get() = _upcomingElections
 
-    //TODO: Create functions to navigate to saved or upcoming election voter info
+    val selectedElections = repository.selectAll()
 
+    fun displayVoterInfoSuccessful() {
+        _goToVoterInfo.value = null
+    }
+
+    fun displayVoterInfo(election: Election) {
+        _goToVoterInfo.value = election
+    }
 }
