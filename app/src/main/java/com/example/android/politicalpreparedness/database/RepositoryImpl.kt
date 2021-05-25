@@ -15,20 +15,33 @@ class RepositoryImpl constructor(
     override fun selectById(id: Int): LiveData<Election?> =
         electionDao.selectById(id)
 
+    override fun selectFollowedById(id: Int): LiveData<Followed?> =
+        electionDao.selectFollowedById(id)
+
     override fun selectAll(): LiveData<List<Election>> =
         electionDao.selectAll()
 
-    override suspend fun insert(election: Election) {
-        Timber.i("INSERT: ${election.toString()}")
+    override fun selectFollowedAll(): LiveData<List<Election>> =
+        electionDao.selectFollowedAll()
+
+    override suspend fun insert(id: Int) {
+        Timber.i("INSERT: $id")
         withContext(Dispatchers.IO) {
-            electionDao.insert(election)
+            electionDao.insert(id)
         }
     }
 
-    override suspend fun delete(election: Election) {
-        Timber.i("DELETE: ${election.toString()}")
+    override suspend fun insertAll(vararg election: Election) {
+        Timber.i("INSERT ALL: ${election.toString()}")
         withContext(Dispatchers.IO) {
-            electionDao.delete(election)
+            electionDao.insertAll(*election)
+        }
+    }
+
+    override suspend fun delete(id: Int) {
+        Timber.i("DELETE: $id")
+        withContext(Dispatchers.IO) {
+            electionDao.delete(id)
         }
     }
 

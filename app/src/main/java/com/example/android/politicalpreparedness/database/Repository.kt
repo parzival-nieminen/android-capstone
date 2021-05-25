@@ -1,20 +1,23 @@
 package com.example.android.politicalpreparedness.database
 
 import androidx.lifecycle.LiveData
-import com.example.android.politicalpreparedness.network.models.Election
-import com.example.android.politicalpreparedness.network.models.ElectionResponse
-import com.example.android.politicalpreparedness.network.models.RepresentativeResponse
-import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
+import com.example.android.politicalpreparedness.network.models.*
 
 interface Repository {
 
     fun selectById(id: Int): LiveData<Election?>
 
+    fun selectFollowedById(id: Int): LiveData<Followed?>
+
     fun selectAll(): LiveData<List<Election>>
 
-    suspend fun insert(election: Election)
+    fun selectFollowedAll(): LiveData<List<Election>>
 
-    suspend fun delete(election: Election)
+    suspend fun insert(id: Int)
+
+    suspend fun insertAll(vararg election: Election)
+
+    suspend fun delete(id: Int)
 
     suspend fun getElections(): ElectionResponse
 

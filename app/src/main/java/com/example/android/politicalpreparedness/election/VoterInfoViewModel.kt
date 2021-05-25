@@ -33,14 +33,14 @@ class VoterInfoViewModel(private val repository: Repository, val election: Elect
         get() = _urlBrowser
 
     val isFollow: LiveData<Boolean> =
-        Transformations.map(repository.selectById(election.id)) { it != null }
+        Transformations.map(repository.selectFollowedById(election.id)) { it != null }
 
     fun toggleFollowElection(election: Election, isFollow: Boolean) {
         viewModelScope.launch {
             if (isFollow)
-                repository.delete(election)
+                repository.delete(election.id)
             else
-                repository.insert(election)
+                repository.insert(election.id)
         }
     }
 

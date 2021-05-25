@@ -32,14 +32,16 @@
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:listData="@{viewModel.upcomingElections}" />
+            app:listDataOnline="@{viewModel.upcomingElections}"
+            app:listDataOffline="@{viewModel.offlineElection}"/>
 
         <ProgressBar
             android:id="@+id/status_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:displayProgressBar="@{viewModel.upcomingElections}"
+            app:displayProgressBarOnline="@{viewModel.upcomingElections}"
+            app:displayProgressBarOffline="@{viewModel.offlineElection}"
             app:layout_constraintBottom_toBottomOf="@+id/recycler_view_upcoming_election"
             app:layout_constraintEnd_toEndOf="@+id/recycler_view_upcoming_election"
             app:layout_constraintStart_toStartOf="@+id/recycler_view_upcoming_election"

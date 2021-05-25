@@ -19,10 +19,24 @@ fun bindDisplayProgressBar(view: View, it: Any?) {
     view.visibility = if (it != null) View.GONE else View.VISIBLE
 }
 
+@BindingAdapter("displayProgressBarOnline", "displayProgressBarOffline")
+fun bindDisplayProgressBar(view: View, online: Any?, offline: Any?) {
+    view.visibility = if (online != null) View.GONE else View.VISIBLE
+    view.visibility = if (offline != null) View.GONE else View.VISIBLE
+}
+
 @BindingAdapter("listData")
 fun bindListData(recyclerView: RecyclerView, data: List<Election>?) {
     val adapter = recyclerView.adapter as ElectionListAdapter
     data?.let { adapter.addHeaderAndSubmitList(it) }
+    recyclerView.scrollToPosition(0)
+}
+
+@BindingAdapter("listDataOnline", "listDataOffline")
+fun bindListDataOffline(recyclerView: RecyclerView, dataOnline: List<Election>?, dataOffline: List<Election>?) {
+    val adapter = recyclerView.adapter as ElectionListAdapter
+    dataOnline?.let { adapter.addHeaderAndSubmitList(it) }
+    dataOffline?.let { adapter.addHeaderAndSubmitList(it) }
     recyclerView.scrollToPosition(0)
 }
 
