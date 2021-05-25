@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ConstraintSet android:id="@+id/start">
-        <Constraint android:id="@+id/representatives_search" />
+        <Constraint android:id="@+id/representatives_search_section" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@id/representatives_search"
+            android:id="@id/representatives_search_section"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="parent"
@@ -17,11 +17,10 @@
 
     <Transition
         app:constraintSetEnd="@id/end"
-        app:constraintSetStart="@+id/start"
-        app:motionInterpolator="linear">
+        app:constraintSetStart="@+id/start">
 
         <OnSwipe
             app:dragDirection="dragUp"
-            app:touchAnchorId="@id/cl_representatives"/>
+            app:touchAnchorId="@id/my_representatives_section"/>
     </Transition>
 </MotionScene>
