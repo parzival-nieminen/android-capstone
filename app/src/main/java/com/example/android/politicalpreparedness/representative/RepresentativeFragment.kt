@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,7 @@ import androidx.fragment.app.Fragment
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
@@ -25,17 +25,44 @@ import java.util.*
 class RepresentativeFragment : Fragment() {
 
     companion object {
-        const val REQUEST_LOCATION_PERMISSION = 1001
+        const val REQUEST_LOCATION_PERMISSION = 42
     }
 
     private lateinit var binding: FragmentRepresentativeBinding
-    private lateinit var location: Location
+    private var location: Location? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+    private val locationRequest: LocationRequest
+        get() {
+            return LocationRequest.create().apply {
+                interval = 10000
+                fastestInterval = 5000
+                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            }
+        }
     val viewModel: RepresentativeViewModel by viewModel()
 
+    override fun onStart() {
+        super.onStart()
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (newLocation in locationResult.locations) {
+                    Timber.i("NEW LOCATION $newLocation")
+                    location = newLocation
+                }
+                stopLocationUpdates()
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopLocationUpdates()
+    }
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRepresentativeBinding.inflate(inflater)
@@ -57,17 +84,21 @@ class RepresentativeFragment : Fragment() {
 
         binding.useMyLocationButton.setOnClickListener {
             hideKeyboard()
-            val address = geoCodeLocation(location)
-            Timber.i(address.toFormattedString())
-            viewModel.address.postValue(address)
-            viewModel.callGetRepresentative(address)
+            if (location == null) {
+                checkLocationPermissions()
+            }
+            if (location != null) {
+                val address = geoCodeLocation(location!!)
+                Timber.i(address.toFormattedString())
+                viewModel.address.postValue(address)
+                viewModel.callGetRepresentative(address)
+            }
         }
         return binding.root
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
+        requestCode: Int, permissions: Array<String>,
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
@@ -103,6 +134,11 @@ class RepresentativeFragment : Fragment() {
             Timber.i("CURRENT LOCATION: $location")
             this.location = location
         }
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    startLocationUpdates()
+                }
+            }
     }
 
     private fun geoCodeLocation(location: Location): Address {
@@ -121,5 +157,17 @@ class RepresentativeFragment : Fragment() {
     private fun hideKeyboard() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest, locationCallback,
+            Looper.getMainLooper()
+        )
     }
 }
