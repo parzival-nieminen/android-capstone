@@ -62,6 +62,14 @@ class VoterInfoFragment : Fragment() {
                         binding.electionAddress.show()
                         binding.labelCorrespondenceHeader.show()
                     }
+                    binding.votingLocation.hide()
+                    if (it.votingLocationFinderUrl != null) {
+                        binding.votingLocation.show()
+                    }
+                    binding.ballotInformation.hide()
+                    if (it.ballotInfoUrl != null) {
+                        binding.ballotInformation.show()
+                    }
                 }
         }
         return binding.root
